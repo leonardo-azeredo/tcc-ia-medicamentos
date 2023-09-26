@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Listar Medicamentos</title>
+</head>
+<body>
+    <h1>Listar Medicamentos</h1>
+    <ul>
+        {% for medicamento in medicamentos %}
+            <li>
+                {{ medicamento['nome'] }}
+                <a href="/excluir_medicamento/{{ medicamento['id'] }}">Excluir</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="/">Voltar para a página inicial</a>
+</body>
+</html>

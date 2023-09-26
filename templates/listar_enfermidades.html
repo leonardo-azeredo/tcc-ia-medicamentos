@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Listar Enfermidades</title>
+</head>
+<body>
+    <h1>Listar Enfermidades</h1>
+    <ul>
+        {% for enfermidade in enfermidades %}
+            <li>
+                {{ enfermidade['nome'] }}
+                <a href="/excluir_enfermidade/{{ enfermidade['id'] }}">Excluir</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="/">Voltar para a página inicial</a>
+</body>
+</html>

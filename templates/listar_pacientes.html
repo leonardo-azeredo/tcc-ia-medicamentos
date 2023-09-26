@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Listar Pacientes</title>
+</head>
+<body>
+    <h1>Listar Pacientes e Medicamentos</h1>
+    <ul>
+        {% for paciente in pacientes %}
+            <li>
+                <strong>Nome:</strong> {{ paciente['nome'] }}<br>
+                <strong>CPF:</strong> {{ paciente['cpf'] }}<br>
+                <strong>Sexo:</strong> {{ paciente['sexo'] }}<br>
+                <strong>Idade:</strong> {{ paciente['idade'] }}<br>
+                <strong>Enfermidade:</strong> {{ paciente['enfermidade'] }}<br>
+                <strong>Medicamentos:</strong> {{ paciente['medicamentos'] or 'Nenhum' }}<br>
+                <a href="/atribuir_medicamento/{{ paciente['id'] }}">Adicionar Medicamento</a>
+                <a href="/excluir_paciente/{{ paciente['id'] }}">Excluir</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="/">Voltar para a página inicial</a>
+</body>
+</html>
