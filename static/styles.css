@@ -1,0 +1,37 @@
+/* Estilo para o título h1 */
+h1 {
+    color: #007BFF; /* Cor do texto */
+    font-size: 36px; /* Tamanho da fonte */
+    text-align: center; /* Alinhamento de texto */
+    margin-top: 20px; /* Espaçamento superior */
+}
+
+/* Estilo para a lista não ordenada ul */
+ul {
+    list-style: none; /* Remover marcadores de lista */
+    padding: 0; /* Remover preenchimento padrão */
+    text-align: center; /* Alinhamento de texto */
+    margin-top: 40px; /* Espaçamento superior */
+}
+
+/* Estilo para os links da lista */
+li a {
+    text-decoration: none; /* Remover sublinhado dos links */
+    color: #333; /* Cor dos links */
+    font-weight: bold; /* Negrito para links */
+    display: block; /* Transformar os links em blocos */
+    padding: 10px 0; /* Espaçamento entre os links */
+    transition: background-color 0.3s, color 0.3s; /* Transição suave de cor */
+}
+
+/* Estilo de hover para os links */
+li a:hover {
+    background-color: #007BFF; /* Cor de fundo ao passar o mouse */
+    color: #fff; /* Cor do texto ao passar o mouse */
+}
+
+/* Estilo para o corpo do texto */
+body {
+    font-family: Arial, sans-serif; /* Fonte do texto */
+    background-color: #f4f4f4; /* Cor de fundo da página */
+}

@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from flask_mysqldb import MySQL
+import re
 
 app = Flask(__name__)
 
@@ -11,6 +12,10 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
 mysql = MySQL(app)
 
+# Função para remover pontos e traços do CPF
+def limpar_cpf(cpf):
+    return re.sub(r'[^\d]', '', cpf)
+
 @app.route('/')
 def home():
     return render_template('home.html')
@@ -19,16 +24,27 @@ def home():
 def cadastrar_paciente():
     if request.method == 'POST':
         nome = request.form['nome']
-        cpf = request.form['cpf']
+        cpf = limpar_cpf(request.form['cpf'])  # Remover pontos e traços do CPF
         sexo = request.form['sexo']
         idade = request.form['idade']
         enfermidade_id = request.form['enfermidade']
+        
+        # Verificar se o CPF já existe no banco de dados
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT id FROM pacientes WHERE cpf = %s", [cpf])
+        paciente_existente = cur.fetchone()
+        cur.close()
+        
+        if paciente_existente:
+            return "Já existe um paciente com este CPF. Por favor, verifique o CPF e tente novamente."
+        
         cur = mysql.connection.cursor()
         cur.execute("INSERT INTO pacientes (nome, cpf, sexo, idade, enfermidade_id) VALUES (%s, %s, %s, %s, %s)",
                     (nome, cpf, sexo, idade, enfermidade_id))
         mysql.connection.commit()
         cur.close()
         return redirect(url_for('listar_pacientes'))
+    
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM enfermidades")
     enfermidades = cur.fetchall()
