@@ -40,7 +40,7 @@
                                 <ul class="nav-border nav nav-pills" role="tablist">
                                     <li class="nav-item">
                                         <a class="nav-link active fw-semibold" data-bs-toggle="tab" href="#LogIn_Tab"
-                                            role="tab">Logar</a>
+                                            role="tab">Entrar</a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="nav-link fw-semibold" data-bs-toggle="tab" href="#Register_Tab"

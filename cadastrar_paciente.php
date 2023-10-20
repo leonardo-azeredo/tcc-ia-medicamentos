@@ -195,56 +195,120 @@ include "include/mysqlconecta.php";
     <script src="assets/plugins/sweet-alert2/sweetalert2.min.js"></script>
 
     <!--CADASTRO VIA AJAX-->
-    <script>
-    const msg = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-            toast.addEventListener('mouseenter', Swal.stopTimer)
-            toast.addEventListener('mouseleave', Swal.resumeTimer)
-        }
-    });
+<script>
+const msg = Swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+        toast.addEventListener('mouseenter', Swal.stopTimer)
+        toast.addEventListener('mouseleave', Swal.resumeTimer)
+    }
+});
 
-    $(document).ready(function() {
-        $("#formulario_paciente").submit(function(e) {
-            e.preventDefault();
-            var formData = new FormData(this);
-            $.ajax({
-                url: 'assets/ajax/cria_paciente.php',
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                cache: false,
-                processData: false,
-                success: function(data) {
-                    let result = $.parseJSON(data);
-                    console.log(result)
-                    if (result.success) {
-                        msg.fire({
-                            icon: 'success',
-                            title: 'Cadastrado com sucesso'
-                        });
-                        location.href = "home.php";
-                        return;
-                    }
-
-                    msg.fire({
-                        icon: 'error',
-                        title: 'nome incorreto.'
-                    });
-                },
-                error: function() {
-                    msg.fire({
-                        icon: 'error',
-                        title: 'Ocorreu um erro.'
-                    });
-                }
+$(document).ready(function() {
+    $("#formulario_paciente").submit(function(e) {
+        e.preventDefault();
+        var formData = new FormData(this);
+        
+        // Verifique o formato do CPF
+        var cpf = formData.get("cpf");
+        if (!validarCPF(cpf)) {
+            msg.fire({
+                icon: 'error',
+                title: 'CPF inválido. Por favor, insira apenas números.'
             });
+            return;
+        }
+
+        $.ajax({
+            url: 'assets/ajax/cria_paciente.php',
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function(data) {
+                let result = $.parseJSON(data);
+                console.log(result)
+                if (result.success) {
+                    msg.fire({
+                        icon: 'success',
+                        title: 'Cadastrado com sucesso'
+                    });
+                    location.href = "home.php";
+                    return;
+                }
+
+                msg.fire({
+                    icon: 'error',
+                    title: 'CPF Já cadastrado'
+                });
+            },
+            error: function() {
+                msg.fire({
+                    icon: 'error',
+                    title: 'Ocorreu um erro.'
+                });
+            }
         });
     });
+});
+
+// Função para validar o formato do CPF
+function validarCPF(cpf) {
+    // Remove todos os caracteres não numéricos
+    cpf = cpf.replace(/\D/g, '');
+
+    // O CPF deve ter 11 dígitos
+    if (cpf.length !== 11) {
+        return false;
+    }
+
+    // Verifica se todos os dígitos são iguais, o que é inválido
+    if (/^(\d)\1+$/.test(cpf)) {
+        return false;
+    }
+
+    // Algoritmo de validação do CPF
+    var soma = 0;
+    var resto;
+
+    for (var i = 1; i <= 9; i++) {
+        soma = soma + parseInt(cpf.substring(i - 1, i)) * (11 - i);
+    }
+
+    resto = (soma * 10) % 11;
+
+    if ((resto === 10) || (resto === 11)) {
+        resto = 0;
+    }
+
+    if (resto !== parseInt(cpf.substring(9, 10))) {
+        return false;
+    }
+
+    soma = 0;
+    for (var i = 1; i <= 10; i++) {
+        soma = soma + parseInt(cpf.substring(i - 1, i)) * (12 - i);
+    }
+
+    resto = (soma * 10) % 11;
+
+    if ((resto === 10) || (resto === 11)) {
+        resto = 0;
+    }
+
+    if (resto !== parseInt(cpf.substring(10, 11))) {
+        return false;
+    }
+
+    return true;
+}
+</script>
+
 
     function goBack() {
         history.back();
