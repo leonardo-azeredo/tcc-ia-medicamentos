@@ -1,24 +1,24 @@
 <?php
-    include "include/valida_session_usuario.php";
-    include "include/mysqlconecta.php";
-    $enfermidades = array();
-    $medicamentos = array();
+include "include/valida_session_usuario.php";
+include "include/mysqlconecta.php";
+$enfermidades = array();
+$medicamentos = array();
 
-    $SQL = "SELECT * FROM enfermidade";
-    $result = @mysqli_query($conexao, $SQL) or die("Ocorreu um erro ao consultar as enfermidades.");
+$SQL = "SELECT * FROM enfermidade";
+$result = @mysqli_query($conexao, $SQL) or die("Ocorreu um erro ao consultar as enfermidades.");
 
-    while ($row = mysqli_fetch_assoc($result)) {
-        $enfermidades[] = $row;
-    }
+while ($row = mysqli_fetch_assoc($result)) {
+    $enfermidades[] = $row;
+}
 
-    $SQL = "SELECT * FROM medicamento";
-    $result = @mysqli_query($conexao, $SQL) or die("Ocorreu um erro ao consultar os medicamentos.");
+$SQL = "SELECT * FROM medicamento";
+$result = @mysqli_query($conexao, $SQL) or die("Ocorreu um erro ao consultar os medicamentos.");
 
-    while ($row = mysqli_fetch_assoc($result)) {
-        $medicamentos[] = $row;
-    }
-
+while ($row = mysqli_fetch_assoc($result)) {
+    $medicamentos[] = $row;
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -110,7 +110,7 @@
 <body class="">
     <!-- Left Sidenav -->
     <div class="left-sidenav">
-        <?php include "left_menu.php";?>
+        <?php include "left_menu.php"; ?>
     </div>
     <!-- end left-sidenav-->
 
@@ -118,7 +118,7 @@
         <!-- Top Bar Start -->
         <div class="topbar">
             <!-- Navbar -->
-            <?php include "navbar.php";?>
+            <?php include "navbar.php"; ?>
             <!-- end navbar-->
         </div>
         <div class="page-content" style="background-color: #F2F3F3;">
@@ -149,6 +149,7 @@
                                             <th>Idade</th>
                                             <th>Enfermidade</th>
                                             <th>Medicamento</th>
+                                            <th>Analise IA</th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -162,8 +163,8 @@
                                             <select id="enfermidade" name="enfermidade" class="form-select">
                                                 <option selected>Selecione uma enfermidade</option>
                                                 <?php foreach ($enfermidades as $enfermidade) : ?>
-                                                <option value="<?= $enfermidade['id_enfermidade'] ?>">
-                                                    <?= $enfermidade['nome_enfermidade'] ?></option>
+                                                    <option value="<?= $enfermidade['id_enfermidade'] ?>">
+                                                        <?= $enfermidade['nome_enfermidade'] ?></option>
                                                 <?php endforeach; ?>
                                             </select>
                                         </div>
@@ -182,8 +183,8 @@
                                         <select id="medicamento" name="medicamento" class="form-select">
                                             <option selected>Selecione um medicamento</option>
                                             <?php foreach ($medicamentos as $medicamento) : ?>
-                                            <option value="<?= $medicamento['id_medicamento'] ?>">
-                                                <?= $medicamento['nome_medicamento'] ?></option>
+                                                <option value="<?= $medicamento['id_medicamento'] ?>">
+                                                    <?= $medicamento['nome_medicamento'] ?></option>
                                             <?php endforeach; ?>
                                         </select>
                                         <div class="btn-div">
@@ -196,7 +197,6 @@
                         </div>
                     </div> <!-- end col -->
                 </div> <!-- end row -->
-
             </div><!-- container -->
         </div>
         <!-- end page content -->
@@ -231,7 +231,6 @@
     <!-- <script src="assets/pages/jquery.datatable.init.js"></script> -->
 
     <!-- Plugins js -->
-
     <script src="assets/plugins/select2/select2.min.js"></script>
     <script src="assets/plugins/timepicker/bootstrap-material-datetimepicker.js"></script>
     <script src="assets/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
@@ -289,6 +288,11 @@ $("#tabela_meus_pacientes").DataTable({
         },
         {
             data: "anmpac_medicamento"
+        },
+        {
+            render: function(data, type, row) {
+                return '<button class="btn btn-primary" onclick="analiseIA(\'' + row.anmpac_cpf + '\')">Análise IA</button>';
+            }
         }
     ]
 });
@@ -319,75 +323,11 @@ $(document).ready(function() {
             toast.addEventListener('mouseleave', Swal.resumeTimer)
         }
     });
-    $("#enfermidadeForm").submit(function(e) {
-        e.preventDefault();
-        var formData = new FormData(this);
-        $.ajax({
-            url: 'assets/ajax/update_enfermidade.php',
-            type: 'POST',
-            data: formData,
-            contentType: false,
-            cache: false,
-            processData: false,
-            success: function(data) {
-                let result = $.parseJSON(data);
-                console.log(result)
-                if (result.success) {
-                    msg.fire({
-                        icon: 'success',
-                        title: 'Cadastrado com sucesso'
-                    });
-                    location.href = "home.php";
-                    return;
-                }
 
-                msg.fire({
-                    icon: 'error',
-                    title: 'nome incorreto.'
-                });
-            },
-            error: function() {
-                msg.fire({
-                    icon: 'error',
-                    title: 'Ocorreu um erro.'
-                });
-            }
-        });
-    });
-    $("#medicamentoForm").submit(function(e) {
-        e.preventDefault();
-        var formData = new FormData(this);
-        $.ajax({
-            url: 'assets/ajax/update_medicamento.php',
-            type: 'POST',
-            data: formData,
-            contentType: false,
-            cache: false,
-            processData: false,
-            success: function(data) {
-                let result = $.parseJSON(data);
-                console.log(result)
-                if (result.success) {
-                    msg.fire({
-                        icon: 'success',
-                        title: 'Cadastrado com sucesso'
-                    });
-                    location.href = "home.php";
-                    return;
-                }
-
-                msg.fire({
-                    icon: 'error',
-                    title: 'nome incorreto.'
-                });
-            },
-            error: function() {
-                msg.fire({
-                    icon: 'error',
-                    title: 'Ocorreu um erro.'
-                });
-            }
-        });
-    });
+    function analiseIA(cpf) {
+        // Coloque aqui o código para a análise de IA com base no CPF fornecido.
+        // Você pode abrir um modal, redirecionar para outra página ou executar qualquer outra ação desejada.
+        console.log('Análise IA para CPF: ' + cpf);
+    }
 });
 </script>
