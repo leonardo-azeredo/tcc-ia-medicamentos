@@ -150,6 +150,7 @@ while ($row = mysqli_fetch_assoc($result)) {
                                             <th>Enfermidade</th>
                                             <th>Medicamento</th>
                                             <th>Analise IA</th>
+                                            <th>Adicionar</th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -159,12 +160,12 @@ while ($row = mysqli_fetch_assoc($result)) {
                                     <h2>Adicionar Enfermidade</h2>
                                     <form id="enfermidadeForm" class="form">
                                         <div class="form">
-                                            <input type="hidden" id="cpfenf" name="cpfenf">
+                                            <input type="hidden" name="id_paciente">
                                             <select id="enfermidade" name="enfermidade" class="form-select">
                                                 <option selected>Selecione uma enfermidade</option>
                                                 <?php foreach ($enfermidades as $enfermidade) : ?>
-                                                    <option value="<?= $enfermidade['id_enfermidade'] ?>">
-                                                        <?= $enfermidade['nome_enfermidade'] ?></option>
+                                                <option value="<?= $enfermidade['id_enfermidade'] ?>">
+                                                    <?= $enfermidade['nome_enfermidade'] ?></option>
                                                 <?php endforeach; ?>
                                             </select>
                                         </div>
@@ -179,12 +180,12 @@ while ($row = mysqli_fetch_assoc($result)) {
                                 <div class="modal-content">
                                     <h2>Adicionar Medicamento</h2>
                                     <form id="medicamentoForm" class="form">
-                                        <input type="hidden" id="cpfmed" name="cpfmed">
+                                        <input type="hidden" name="id_paciente">
                                         <select id="medicamento" name="medicamento" class="form-select">
                                             <option selected>Selecione um medicamento</option>
                                             <?php foreach ($medicamentos as $medicamento) : ?>
-                                                <option value="<?= $medicamento['id_medicamento'] ?>">
-                                                    <?= $medicamento['nome_medicamento'] ?></option>
+                                            <option value="<?= $medicamento['id_medicamento'] ?>">
+                                                <?= $medicamento['nome_medicamento'] ?></option>
                                             <?php endforeach; ?>
                                         </select>
                                         <div class="btn-div">
@@ -251,15 +252,16 @@ function fecharModal() {
     $("#enfermidadeForm")[0].reset();
 }
 
-function addMedicamento(cpf) {
-    $("#cpfmed").val(cpf);
+function addMedicamento(id) {
+    $("input[name='id_paciente']").val(id);
     $("#medicamentoModal").css("display", "block");
 }
 
-function addEfermidade(cpf) {
-    $("#cpfenf").val(cpf);
+function addEnfermidade(id) {
+    $("input[name='id_paciente']").val(id);
     $("#enfermidadeModal").css("display", "block");
 }
+
 
 $("#tabela_meus_pacientes").DataTable({
     language: {
@@ -290,9 +292,10 @@ $("#tabela_meus_pacientes").DataTable({
             data: "anmpac_medicamento"
         },
         {
-            render: function(data, type, row) {
-                return '<button class="btn btn-primary" onclick="analiseIA(\'' + row.anmpac_cpf + '\')">Análise IA</button>';
-            }
+            data: "buttonsia"
+        },
+        {
+            data: "buttonsadd"
         }
     ]
 });
@@ -304,7 +307,6 @@ function busca_pacientes() {
     }).done(function(result) {
 
         var data = JSON.parse(result);
-
         $("#tabela_meus_pacientes").DataTable().clear().draw();
         $("#tabela_meus_pacientes").DataTable().rows.add(data).draw();
     });
@@ -322,6 +324,76 @@ $(document).ready(function() {
             toast.addEventListener('mouseenter', Swal.stopTimer)
             toast.addEventListener('mouseleave', Swal.resumeTimer)
         }
+    });
+    $("#enfermidadeForm").submit(function(e) {
+        e.preventDefault();
+        var formData = new FormData(this);
+        $.ajax({
+            url: 'assets/ajax/adicionar_enfermidade.php',
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function(data) {
+                let result = $.parseJSON(data);
+                console.log(result)
+                if (result.success) {
+                    msg.fire({
+                        icon: 'success',
+                        title: 'Cadastrado com sucesso'
+                    });
+                    location.href = "home.php";
+                    return;
+                }
+
+                msg.fire({
+                    icon: 'error',
+                    title: 'Ocorreu um erro.'
+                });
+            },
+            error: function() {
+                msg.fire({
+                    icon: 'error',
+                    title: 'Ocorreu um erro.'
+                });
+            }
+        });
+    });
+    $("#medicamentoForm").submit(function(e) {
+        e.preventDefault();
+        var formData = new FormData(this);
+        $.ajax({
+            url: 'assets/ajax/adicionar_medicamento.php',
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function(data) {
+                let result = $.parseJSON(data);
+                console.log(result)
+                if (result.success) {
+                    msg.fire({
+                        icon: 'success',
+                        title: 'Cadastrado com sucesso'
+                    });
+                    location.href = "home.php";
+                    return;
+                }
+
+                msg.fire({
+                    icon: 'error',
+                    title: 'Ocorreu um erro.'
+                });
+            },
+            error: function() {
+                msg.fire({
+                    icon: 'error',
+                    title: 'Ocorreu um erro.'
+                });
+            }
+        });
     });
 
     function analiseIA(cpf) {

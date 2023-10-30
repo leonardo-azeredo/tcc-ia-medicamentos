@@ -82,10 +82,19 @@ include "include/valida_session_usuario.php";
                 <!--formulario add_usuarios-->
                 <div class="card">
                     <div class="card-body">
+                        <table id="tabela_medicamentos" class="table table-striped table-bordered dt-responsive nowrap"
+                            style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>ID Medicamento</th>
+                                    <th>Nome Medicamento</th>
+                                    <th>Excluir Medicamento</th>
+                                </tr>
+                            </thead>
+                        </table>
                         <div class="row">
-
+                            <hr style="border: 1px solid #000000;border-radius: 5px; place-items: center">
                             <div class="col-6">
-
                                 <h4 class="d-flex align-items-end" style="
                                                 color: #000000;
                                                 
@@ -94,24 +103,10 @@ include "include/valida_session_usuario.php";
                                                 font-size: 30px;
                                                 line-height: 29px;
                                                 ">Novo Medicamento</h4><br>
-
-                                <h4 class="d-flex align-items-end" style="
-                                                color: #000000;
-                                                
-                                                font-style: normal;
-                                                font-weight: 600;
-                                                font-size: 20px;
-                                                line-height: 29px;
-                                                ">Medicamento</h4>
                             </div>
-                            <hr style="border: 1px solid #000000;border-radius: 5px; place-items: center">
+
                             <form class="form-horizontal well" id="formulario_medicamento" method="post">
                                 <div class="row">
-                                    <div class="row mb-3">
-                                        <a onclick="goBack()"
-                                            style="cursor:pointer;font-weight: 700;font-size: 16px;color: #333388;"><i
-                                                class="mdi mdi-arrow-left"></i> Voltar</a>
-                                    </div>
 
                                     <div class="mt-3 col-sm-12">
                                         <label class="mb-2">Nome do medicamento</label>
@@ -121,8 +116,7 @@ include "include/valida_session_usuario.php";
 
                                     <div class="row mt-3">
                                         <div class="col-sm-10 ms-auto text-end">
-                                            <a class="btn btn-danger"
-                                                onclick="goBack()">Cancelar</a>
+                                            <a class="btn btn-danger" onclick="goBack()">Cancelar</a>
                                             <input type="submit" class="btn btn-success" value="Salvar alterações" />
                                         </div>
                                     </div>
@@ -182,7 +176,68 @@ include "include/valida_session_usuario.php";
 
     <!--CADASTRO VIA AJAX-->
     <script>
+    function excluir(id) {
+        $.ajax({
+            url: 'assets/ajax/excluir_medicamentos.php',
+            type: 'POST',
+            data: {
+                id: id
+            },
+            dataType: 'json',
+            success: function(data) {
+                if (data.success) {
+                    location.href = "cadastrar_medicamento.php";
+                } else {
+                    alert("Erro ao excluir");
+                }
+            },
+            error: function() {
+                alert("Erro ao excluir");
+            }
+        });
+    }
+
     $(document).ready(function() {
+        $("#tabela_medicamentos").DataTable({
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/pt-BR.json',
+            },
+            pageLength: 10,
+            order: [],
+            paging: true,
+            searching: true,
+            info: true,
+            data: [],
+            columns: [{
+                    data: "id_medicamento"
+                },
+                {
+                    data: "nome_medicamento"
+                },
+                {
+                    render: function(data, type, row) {
+                        return '<button class="btn btn-danger" onclick="excluir(\'' + row
+                            .id_medicamento +
+                            '\')">Excluir</button>';
+                    }
+                }
+            ]
+        });
+
+        function busca_medicamentos() {
+            $.ajax({
+                url: "assets/ajax/buscar_medicamentos.php",
+                type: "GET"
+            }).done(function(result) {
+
+                var data = JSON.parse(result);
+                $("#tabela_medicamentos").DataTable().clear().draw();
+                $("#tabela_medicamentos").DataTable().rows.add(data).draw();
+            });
+        }
+
+        busca_medicamentos();
+
         const msg = Swal.mixin({
             toast: true,
             position: 'top-end',
@@ -230,7 +285,6 @@ include "include/valida_session_usuario.php";
             });
         });
     });
-
 
     //VOLTAR A PÁGINA
     function goBack() {
