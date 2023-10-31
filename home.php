@@ -245,161 +245,161 @@ while ($row = mysqli_fetch_assoc($result)) {
 
 </html>
 <script>
-function fecharModal() {
-    $("#medicamentoModal").css("display", "none");
-    $("#medicamentoForm")[0].reset();
-    $("#enfermidadeModal").css("display", "none");
-    $("#enfermidadeForm")[0].reset();
-}
-
-function addMedicamento(id) {
-    $("input[name='id_paciente']").val(id);
-    $("#medicamentoModal").css("display", "block");
-}
-
-function addEnfermidade(id) {
-    $("input[name='id_paciente']").val(id);
-    $("#enfermidadeModal").css("display", "block");
-}
-
-
-$("#tabela_meus_pacientes").DataTable({
-    language: {
-        url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/pt-BR.json',
-    },
-    pageLength: 100,
-    order: [],
-    paging: true,
-    searching: true,
-    info: true,
-    data: [],
-    columns: [{
-            data: "anmpac_nome"
-        },
-        {
-            data: "anmpac_cpf"
-        },
-        {
-            data: "anmpac_sexo"
-        },
-        {
-            data: "anmpac_idade"
-        },
-        {
-            data: "anmpac_enfermidade"
-        },
-        {
-            data: "anmpac_medicamento"
-        },
-        {
-            data: "buttonsia"
-        },
-        {
-            data: "buttonsadd"
-        }
-    ]
-});
-
-function busca_pacientes() {
-    $.ajax({
-        url: "assets/ajax/buscar_pacientes.php",
-        type: "GET"
-    }).done(function(result) {
-
-        var data = JSON.parse(result);
-        $("#tabela_meus_pacientes").DataTable().clear().draw();
-        $("#tabela_meus_pacientes").DataTable().rows.add(data).draw();
-    });
-}
-
-busca_pacientes();
-$(document).ready(function() {
-    const msg = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-            toast.addEventListener('mouseenter', Swal.stopTimer)
-            toast.addEventListener('mouseleave', Swal.resumeTimer)
-        }
-    });
-    $("#enfermidadeForm").submit(function(e) {
-        e.preventDefault();
-        var formData = new FormData(this);
-        $.ajax({
-            url: 'assets/ajax/adicionar_enfermidade.php',
-            type: 'POST',
-            data: formData,
-            contentType: false,
-            cache: false,
-            processData: false,
-            success: function(data) {
-                let result = $.parseJSON(data);
-                console.log(result)
-                if (result.success) {
-                    msg.fire({
-                        icon: 'success',
-                        title: 'Cadastrado com sucesso'
-                    });
-                    location.href = "home.php";
-                    return;
-                }
-
-                msg.fire({
-                    icon: 'error',
-                    title: 'Ocorreu um erro.'
-                });
-            },
-            error: function() {
-                msg.fire({
-                    icon: 'error',
-                    title: 'Ocorreu um erro.'
-                });
-            }
-        });
-    });
-    $("#medicamentoForm").submit(function(e) {
-        e.preventDefault();
-        var formData = new FormData(this);
-        $.ajax({
-            url: 'assets/ajax/adicionar_medicamento.php',
-            type: 'POST',
-            data: formData,
-            contentType: false,
-            cache: false,
-            processData: false,
-            success: function(data) {
-                let result = $.parseJSON(data);
-                console.log(result)
-                if (result.success) {
-                    msg.fire({
-                        icon: 'success',
-                        title: 'Cadastrado com sucesso'
-                    });
-                    location.href = "home.php";
-                    return;
-                }
-
-                msg.fire({
-                    icon: 'error',
-                    title: 'Ocorreu um erro.'
-                });
-            },
-            error: function() {
-                msg.fire({
-                    icon: 'error',
-                    title: 'Ocorreu um erro.'
-                });
-            }
-        });
-    });
-
-    function analiseIA(cpf) {
-        // Coloque aqui o código para a análise de IA com base no CPF fornecido.
-        // Você pode abrir um modal, redirecionar para outra página ou executar qualquer outra ação desejada.
-        console.log('Análise IA para CPF: ' + cpf);
+    function fecharModal() {
+        $("#medicamentoModal").css("display", "none");
+        $("#medicamentoForm")[0].reset();
+        $("#enfermidadeModal").css("display", "none");
+        $("#enfermidadeForm")[0].reset();
     }
-});
-</script>
+
+    function addMedicamento(id) {
+        $("input[name='id_paciente']").val(id);
+        $("#medicamentoModal").css("display", "block");
+    }
+
+    function addEnfermidade(id) {
+        $("input[name='id_paciente']").val(id);
+        $("#enfermidadeModal").css("display", "block");
+    }
+
+
+    $("#tabela_meus_pacientes").DataTable({
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/pt-BR.json',
+        },
+        pageLength: 100,
+        order: [],
+        paging: true,
+        searching: true,
+        info: true,
+        data: [],
+        columns: [{
+                data: "anmpac_nome"
+            },
+            {
+                data: "anmpac_cpf"
+            },
+            {
+                data: "anmpac_sexo"
+            },
+            {
+                data: "anmpac_idade"
+            },
+            {
+                data: "anmpac_enfermidade"
+            },
+            {
+                data: "anmpac_medicamento"
+            },
+            {
+                data: "buttonsia"
+            },
+            {
+                data: "buttonsadd"
+            }
+        ]
+    });
+
+    function busca_pacientes() {
+        $.ajax({
+            url: "assets/ajax/buscar_pacientes.php",
+            type: "GET"
+        }).done(function(result) {
+
+            var data = JSON.parse(result);
+            $("#tabela_meus_pacientes").DataTable().clear().draw();
+            $("#tabela_meus_pacientes").DataTable().rows.add(data).draw();
+        });
+    }
+
+    busca_pacientes();
+    $(document).ready(function() {
+        const msg = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        });
+        $("#enfermidadeForm").submit(function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            $.ajax({
+                url: 'assets/ajax/adicionar_enfermidade.php',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function(data) {
+                    let result = $.parseJSON(data);
+                    console.log(result)
+                    if (result.success) {
+                        msg.fire({
+                            icon: 'success',
+                            title: 'Cadastrado com sucesso'
+                        });
+                        location.href = "home.php";
+                        return;
+                    }
+
+                    msg.fire({
+                        icon: 'error',
+                        title: 'Ocorreu um erro.'
+                    });
+                },
+                error: function() {
+                    msg.fire({
+                        icon: 'error',
+                        title: 'Ocorreu um erro.'
+                    });
+                }
+            });
+        });
+        $("#medicamentoForm").submit(function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            $.ajax({
+                url: 'assets/ajax/adicionar_medicamento.php',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function(data) {
+                    let result = $.parseJSON(data);
+                    console.log(result)
+                    if (result.success) {
+                        msg.fire({
+                            icon: 'success',
+                            title: 'Cadastrado com sucesso'
+                        });
+                        location.href = "home.php";
+                        return;
+                    }
+
+                    msg.fire({
+                        icon: 'error',
+                        title: 'Ocorreu um erro.'
+                    });
+                },
+                error: function() {
+                    msg.fire({
+                        icon: 'error',
+                        title: 'Ocorreu um erro.'
+                    });
+                }
+            });
+        });
+
+        function analiseIA(cpf) {
+            // Coloque aqui o código para a análise de IA com base no CPF fornecido.
+            // Você pode abrir um modal, redirecionar para outra página ou executar qualquer outra ação desejada.
+            console.log('Análise IA para CPF: ' + cpf);
+        }
+    });
+</script> 

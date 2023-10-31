@@ -80,10 +80,23 @@ include "include/mysqlconecta.php";
                 <!--formulario add_usuarios-->
                 <div class="card">
                     <div class="card-body">
+                        <table id="tabela_meus_pacientes"
+                            class="table table-striped table-bordered dt-responsive nowrap"
+                            style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>ID Paciente</th>
+                                    <th>Nome Paciente</th>
+                                    <th>CPF Paciente</th>
+                                    <th>Sexo Paciente</th>
+                                    <th>Idade Paciente</th>
+                                    <th>Excluir Paciente</th>
+                                </tr>
+                            </thead>
+                        </table>
                         <div class="row">
-
+                            <hr style="border: 1px solid #000000;border-radius: 5px; place-items: center">
                             <div class="col-6">
-
                                 <h4 class="d-flex align-items-end" style="
                                                 color: #000000;
                                                 
@@ -91,25 +104,11 @@ include "include/mysqlconecta.php";
                                                 font-weight: 600;
                                                 font-size: 30px;
                                                 line-height: 29px;
-                                                ">Novo paciente</h4><br>
-
-                                <h4 class="d-flex align-items-end" style="
-                                                color: #000000;
-                                                
-                                                font-style: normal;
-                                                font-weight: 600;
-                                                font-size: 20px;
-                                                line-height: 29px;
-                                                ">Paciente</h4>
+                                                ">Novo Paciente</h4><br>
                             </div>
-                            <hr style="border: 1px solid #000000; border-radius: 5px; place-items: center">
+
                             <form class="form-horizontal well" id="formulario_paciente" method="post">
                                 <div class="row">
-                                    <div class="row mb-3">
-                                        <a onclick="goBack()"
-                                            style="cursor:pointer;font-weight: 700;font-size: 16px;color: #333388;"><i
-                                                class="mdi mdi-arrow-left"></i> Voltar</a>
-                                    </div>
 
                                     <div class="mt-3 col-sm-12">
                                         <label class="mb-2">Nome do paciente</label>
@@ -136,10 +135,8 @@ include "include/mysqlconecta.php";
 
                                     <div class="row mt-3">
                                         <div class="col-sm-10 ms-auto text-end">
-                                            <a class="btn btn-danger"
-                                                onclick="goBack()">Cancelar</a>
-                                            <input type="submit" class="btn btn-success"
-                                                value="Salvar alterações" />
+                                            <a class="btn btn-danger" onclick="goBack()">Cancelar</a>
+                                            <input type="submit" class="btn btn-success" value="Salvar alterações" />
                                         </div>
                                     </div>
                                 </div>
@@ -148,7 +145,6 @@ include "include/mysqlconecta.php";
                         </div>
                     </div>
                 </div> <!-- end card-body -->
-
             </div><!-- container -->
         </div>
         <!-- end page content -->
@@ -195,124 +191,204 @@ include "include/mysqlconecta.php";
     <script src="assets/plugins/sweet-alert2/sweetalert2.min.js"></script>
 
     <!--CADASTRO VIA AJAX-->
-<script>
-const msg = Swal.mixin({
-    toast: true,
-    position: 'top-end',
-    showConfirmButton: false,
-    timer: 3000,
-    timerProgressBar: true,
-    didOpen: (toast) => {
-        toast.addEventListener('mouseenter', Swal.stopTimer)
-        toast.addEventListener('mouseleave', Swal.resumeTimer)
-    }
-});
+    <script>
+    $("#menu_fila_atendimento").addClass("active");
 
-$(document).ready(function() {
-    $("#formulario_paciente").submit(function(e) {
-        e.preventDefault();
-        var formData = new FormData(this);
-        
-        // Verifique o formato do CPF
-        var cpf = formData.get("cpf");
-        if (!validarCPF(cpf)) {
-            msg.fire({
-                icon: 'error',
-                title: 'CPF inválido. Por favor, insira apenas números.'
-            });
-            return;
-        }
-
+    function excluir(id) {
         $.ajax({
-            url: 'assets/ajax/cria_paciente.php',
+            url: 'assets/ajax/excluir_pacientes.php',
             type: 'POST',
-            data: formData,
-            contentType: false,
-            cache: false,
-            processData: false,
+            data: {
+                id: id
+            },
+            dataType: 'json',
             success: function(data) {
-                let result = $.parseJSON(data);
-                console.log(result)
-                if (result.success) {
-                    msg.fire({
-                        icon: 'success',
-                        title: 'Cadastrado com sucesso'
-                    });
-                    location.href = "home.php";
-                    return;
+                if (data.success) {
+                    location.href = "cadastrar_paciente.php";
+                } else {
+                    alert("Erro ao excluir");
                 }
-
-                msg.fire({
-                    icon: 'error',
-                    title: 'CPF Já cadastrado'
-                });
             },
             error: function() {
-                msg.fire({
-                    icon: 'error',
-                    title: 'Ocorreu um erro.'
-                });
+                alert("Erro ao excluir");
             }
         });
+    }
+
+    //CRIANDO DATATABLE EM BRANCO
+    $("#tabela_meus_pacientes").DataTable({
+        language: {
+            url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/pt-BR.json',
+        },
+        pageLength: 20,
+        lengthMenu: [20, 30, 50, 75, 100],
+        order: [],
+        paging: true,
+        searching: true,
+        info: true,
+        data: [],
+        columns: [{
+                data: "id_paciente"
+            },
+            {
+                data: "anmpac_nome"
+            },
+            {
+                data: "anmpac_cpf"
+            },
+            {
+                data: "anmpac_sexo"
+            },
+            {
+                data: "anmpac_idade"
+            },
+            {
+                render: function(data, type, row) {
+                    return '<button class="btn btn-danger" onclick="excluir(\'' + row
+                        .id_paciente +
+                        '\')">Excluir</button>';
+                }
+            }
+        ]
     });
-});
 
-// Função para validar o formato do CPF
-function validarCPF(cpf) {
-    // Remove todos os caracteres não numéricos
-    cpf = cpf.replace(/\D/g, '');
+    //FUNÇÃO PARA BUSCAR ATENDIMENTOS
+    function busca_pacientes() {
+        $.ajax({
+            url: "assets/ajax/buscar_pacientes.php",
+            type: "GET"
+        }).done(function(result) {
+            var data = JSON.parse(result);
 
-    // O CPF deve ter 11 dígitos
-    if (cpf.length !== 11) {
-        return false;
+            $("#tabela_meus_pacientes").DataTable().clear().draw();
+            $("#tabela_meus_pacientes").DataTable().rows.add(data).draw();
+        });
     }
 
-    // Verifica se todos os dígitos são iguais, o que é inválido
-    if (/^(\d)\1+$/.test(cpf)) {
-        return false;
+    function verDetalhes(anmpac_id) {
+
+        let dadosAtendimento = [];
+
+        dadosAtendimento[0] = {
+            anmpac_id
+        }
+
+        postAndRedirect('historico_paciente.php', dadosAtendimento[0], 'POST');
     }
 
-    // Algoritmo de validação do CPF
-    var soma = 0;
-    var resto;
+    const msg = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    });
 
-    for (var i = 1; i <= 9; i++) {
-        soma = soma + parseInt(cpf.substring(i - 1, i)) * (11 - i);
+    $(document).ready(function() {
+        $("#formulario_paciente").submit(function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+
+            // Verifique o formato do CPF
+            var cpf = formData.get("cpf");
+            if (!validarCPF(cpf)) {
+                msg.fire({
+                    icon: 'error',
+                    title: 'CPF inválido. Por favor, insira apenas números.'
+                });
+                return;
+            }
+
+            $.ajax({
+                url: 'assets/ajax/cria_paciente.php',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                cache: false,
+                processData: false,
+                success: function(data) {
+                    let result = $.parseJSON(data);
+                    console.log(result)
+                    if (result.success) {
+                        msg.fire({
+                            icon: 'success',
+                            title: 'Cadastrado com sucesso'
+                        });
+                        location.href = "cadastrar_paciente.php";
+                        return;
+                    }
+
+                    msg.fire({
+                        icon: 'error',
+                        title: 'CPF Já cadastrado'
+                    });
+                },
+                error: function() {
+                    msg.fire({
+                        icon: 'error',
+                        title: 'Ocorreu um erro.'
+                    });
+                }
+            });
+        });
+    });
+
+    // Função para validar o formato do CPF
+    function validarCPF(cpf) {
+        // Remove todos os caracteres não numéricos
+        cpf = cpf.replace(/\D/g, '');
+
+        // O CPF deve ter 11 dígitos
+        if (cpf.length !== 11) {
+            return false;
+        }
+
+        // Verifica se todos os dígitos são iguais, o que é inválido
+        if (/^(\d)\1+$/.test(cpf)) {
+            return false;
+        }
+
+        // Algoritmo de validação do CPF
+        var soma = 0;
+        var resto;
+
+        for (var i = 1; i <= 9; i++) {
+            soma = soma + parseInt(cpf.substring(i - 1, i)) * (11 - i);
+        }
+
+        resto = (soma * 10) % 11;
+
+        if ((resto === 10) || (resto === 11)) {
+            resto = 0;
+        }
+
+        if (resto !== parseInt(cpf.substring(9, 10))) {
+            return false;
+        }
+
+        soma = 0;
+        for (var i = 1; i <= 10; i++) {
+            soma = soma + parseInt(cpf.substring(i - 1, i)) * (12 - i);
+        }
+
+        resto = (soma * 10) % 11;
+
+        if ((resto === 10) || (resto === 11)) {
+            resto = 0;
+        }
+
+        if (resto !== parseInt(cpf.substring(10, 11))) {
+            return false;
+        }
+
+        return true;
     }
 
-    resto = (soma * 10) % 11;
-
-    if ((resto === 10) || (resto === 11)) {
-        resto = 0;
-    }
-
-    if (resto !== parseInt(cpf.substring(9, 10))) {
-        return false;
-    }
-
-    soma = 0;
-    for (var i = 1; i <= 10; i++) {
-        soma = soma + parseInt(cpf.substring(i - 1, i)) * (12 - i);
-    }
-
-    resto = (soma * 10) % 11;
-
-    if ((resto === 10) || (resto === 11)) {
-        resto = 0;
-    }
-
-    if (resto !== parseInt(cpf.substring(10, 11))) {
-        return false;
-    }
-
-    return true;
-}
-</script>
-
-
-    function goBack() {
-        history.back();
-    }
+    busca_pacientes();
     </script>
 
 </body>

@@ -74,7 +74,7 @@ include "include/valida_session_usuario.php";
                 <div class="breadcrumb" style="margin-bottom: 10px;">
                     <a href="home.php" style="text-decoration: none; color: #000;">Home</a>
                     <span style="color: #888;margin: 0 5px;"> > </span>
-                    <a href="medicamentos.php" style="text-decoration: none; color: #000;">Medicamentos</a>
+                    <a href="cadastrar_medicamento.php" style="text-decoration: none; color: #000;">Medicamentos</a>
                     <span style="color: #888;margin: 0 5px;"> > </span>
                     <span>Cadastrar novo medicamento</span>
                 </div>
@@ -267,7 +267,7 @@ include "include/valida_session_usuario.php";
                             icon: 'success',
                             title: 'Cadastrado com sucesso'
                         });
-                        location.href = "home.php";
+                        location.href = "cadastrar_medicamento.php";
                         return;
                     }
 

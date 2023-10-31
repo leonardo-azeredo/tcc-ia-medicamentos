@@ -8,6 +8,8 @@ $cpf = $_POST['cpf'];
 $idade = $_POST['idade'];
 
 // Verifica se o CPF já existe
+$cpf = preg_replace('/[^0-9]/', '', $cpf);
+
 $checkSQL = "SELECT * FROM paciente WHERE cpf='$cpf';";
 $checkResult = @mysqli_query($conexao, $checkSQL);
 if(mysqli_num_rows($checkResult) > 0){

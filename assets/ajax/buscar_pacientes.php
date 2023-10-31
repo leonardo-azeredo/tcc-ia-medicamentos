@@ -13,6 +13,7 @@ $result_id = @mysqli_query($conexao, $SQL) or die("Ocorreu um erro! 001");
 $linhas_json = array();
 
 while ($rows = mysqli_fetch_array($result_id)) {
+    
     $id_paciente = $rows['id_paciente'];
     $anmpac_nome = $rows['nome'];
     $anmpac_cpf = $rows['cpf'];
@@ -24,6 +25,7 @@ while ($rows = mysqli_fetch_array($result_id)) {
     $buttonsia = "<button type='button' class='btn btn-sm btn-primary col-6' onclick='analiseIA($anmpac_cpf)'>Análise IA</button>";
 
     $linha_json = array(
+        'id_paciente' => $id_paciente,
         'anmpac_nome' => $anmpac_nome,
         'anmpac_cpf' => $anmpac_cpf,
         'anmpac_sexo' => $anmpac_sexo,

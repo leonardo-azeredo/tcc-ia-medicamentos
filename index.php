@@ -24,14 +24,12 @@
 
 <body class="account-body accountbg">
 
-    <!-- Adicionando uma imagem acima do formulário de login -->
-    <img src="include/imagens/logo.jpeg" alt="Imagem de Fundo" style="position: absolute; top: 0; left: 0; width: 50%; z-index: -1;">
-
+<!-- Adicionando uma imagem acima do formulário de login -->
+<img src="include/imagens/logo.jpeg" alt="Imagem de Fundo" style="position: absolute; top: 0; left: 0; width: 50%; z-index: -1;">
     <!-- Restante do seu conteúdo -->
     <div class="container">
         <!-- ... Seu código existente para o formulário de login ... -->
     </div>
-
     <!-- ... Restante do seu HTML ... -->
 </body>
 
