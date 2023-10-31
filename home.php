@@ -395,11 +395,5 @@ while ($row = mysqli_fetch_assoc($result)) {
                 }
             });
         });
-
-        function analiseIA(cpf) {
-            // Coloque aqui o código para a análise de IA com base no CPF fornecido.
-            // Você pode abrir um modal, redirecionar para outra página ou executar qualquer outra ação desejada.
-            console.log('Análise IA para CPF: ' + cpf);
-        }
     });
 </script> 
