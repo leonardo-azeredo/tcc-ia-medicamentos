@@ -148,8 +148,7 @@ while ($row = mysqli_fetch_assoc($result)) {
                                             <th>Sexo</th>
                                             <th>Idade</th>
                                             <th>Enfermidade</th>
-                                            <th>Medicamento</th>
-                                            <th>Analise IA</th>
+                                            <th>Medicamento</th>                                            
                                             <th>Adicionar</th>
                                         </tr>
                                     </thead>
@@ -291,9 +290,7 @@ while ($row = mysqli_fetch_assoc($result)) {
             {
                 data: "anmpac_medicamento"
             },
-            {
-                data: "buttonsia"
-            },
+            
             {
                 data: "buttonsadd"
             }

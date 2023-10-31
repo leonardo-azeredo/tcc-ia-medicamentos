@@ -22,7 +22,6 @@ while ($rows = mysqli_fetch_array($result_id)) {
     $anmpac_enfermidade = $rows['enfermidade'];
     $anmpac_medicamento = $rows['medicamento'];
     $buttonsadd = "<button type='button' class='btn btn-sm me-2 bg-warning text-light' onclick='addEnfermidade($id_paciente)'>Adicionar Enfermidade</button><button type='button' class='btn btn-sm md-2 bg-info text-light' onclick='addMedicamento($id_paciente)'>Adicionar Medicamentos</button>";
-    $buttonsia = "<button type='button' class='btn btn-sm btn-primary col-6' onclick='analiseIA($anmpac_cpf)'>Análise IA</button>";
 
     $linha_json = array(
         'id_paciente' => $id_paciente,
@@ -33,7 +32,7 @@ while ($rows = mysqli_fetch_array($result_id)) {
         'anmpac_enfermidade' => $anmpac_enfermidade,
         'anmpac_medicamento' => $anmpac_medicamento,
         'buttonsadd' => $buttonsadd,
-        'buttonsia' => $buttonsia,
+        
     );
     $linhas_json[] = $linha_json;
 }
