@@ -302,7 +302,7 @@ while ($row = mysqli_fetch_assoc($result)) {
      
     function mostrarInfo(idPaciente, enfermidade, medicamento) {
     const apiEndpoint = 'https://api.openai.com/v1/engines/davinci-codex/completions';
-    const apiKey = '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'; // Sua chave da API da OpenAI
+    const apiKey = 'key'; // Sua chave da API da OpenAI
 
     const requestData = {
         prompt: `Você é um assistente médico inteligente.\nA ${medicamento} é bom para ${enfermidade}?`,
