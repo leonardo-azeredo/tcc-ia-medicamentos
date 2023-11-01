@@ -148,7 +148,8 @@ while ($row = mysqli_fetch_assoc($result)) {
                                             <th>Sexo</th>
                                             <th>Idade</th>
                                             <th>Enfermidade</th>
-                                            <th>Medicamento</th>                                            
+                                            <th>Medicamento</th>
+                                            <th>Analise</th>                                          
                                             <th>Adicionar</th>
                                         </tr>
                                     </thead>
@@ -290,12 +291,44 @@ while ($row = mysqli_fetch_assoc($result)) {
             {
                 data: "anmpac_medicamento"
             },
-            
+            {
+            data: "buttonMostrarInfo" // Coluna para o botão "Mostrar Informações"
+        },            
             {
                 data: "buttonsadd"
             }
         ]
     });
+     
+    function mostrarInfo(idPaciente, enfermidade, medicamento) {
+    const apiEndpoint = 'https://api.openai.com/v1/engines/davinci-codex/completions';
+    const apiKey = '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'; // Sua chave da API da OpenAI
+
+    const requestData = {
+        prompt: `Você é um assistente médico inteligente.\nA ${medicamento} é bom para ${enfermidade}?`,
+        max_tokens: 150
+    };
+
+    fetch(apiEndpoint, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify(requestData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert("Resposta da IA: " + data.choices[0].text);
+    })
+    .catch(error => {
+        console.error('Ocorreu um erro:', error);
+    });
+}
+
+
+
+
 
     function busca_pacientes() {
         $.ajax({
