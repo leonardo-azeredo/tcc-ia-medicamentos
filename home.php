@@ -304,7 +304,7 @@ while ($row = mysqli_fetch_assoc($result)) {
     const url = 'https://api.openai.com/v1/chat/completions';
     const headers = {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer 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'
+        'Authorization': 'Bearer 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'
     };
     const body = JSON.stringify({
         "model": "gpt-3.5-turbo",
@@ -315,7 +315,7 @@ while ($row = mysqli_fetch_assoc($result)) {
             },
             {
                 "role": "user",
-                "content": `O medicamento ${medicamento} é bom para tratar a ${enfermidade}?`
+                "content": `O medicamento ${medicamento} é bom para tratar a ${enfermidade}? Caso a resposta seja é bom ou não responda com ATENÇÃO MEDICAMENTO INDEVIDO ou com SIM, MEDICAMENTO CORRETO`
             }
         ]
     });
