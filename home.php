@@ -300,31 +300,34 @@ while ($row = mysqli_fetch_assoc($result)) {
         ]
     });
      
-    function mostrarInfo(idPaciente, enfermidade, medicamento) {
-    const apiEndpoint = 'https://api.openai.com/v1/engines/davinci-codex/completions';
-    const apiKey = 'key'; // Sua chave da API da OpenAI
-
-    const requestData = {
-        prompt: `Você é um assistente médico inteligente.\nA ${medicamento} é bom para ${enfermidade}?`,
-        max_tokens: 150
+    async function mostrarInfo(idPaciente,enfermidade, medicamento) {
+    const url = 'https://api.openai.com/v1/chat/completions';
+    const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer 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'
     };
-
-    fetch(apiEndpoint, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`
-        },
-        body: JSON.stringify(requestData)
-    })
-    .then(response => response.json())
-    .then(data => {
-        alert("Resposta da IA: " + data.choices[0].text);
-    })
-    .catch(error => {
-        console.error('Ocorreu um erro:', error);
+    const body = JSON.stringify({
+        "model": "gpt-3.5-turbo",
+        "messages": [
+            {
+                "role": "system",
+                "content": "Você é um assistente médico inteligente."
+            },
+            {
+                "role": "user",
+                "content": `O medicamento ${medicamento} é bom para tratar a ${enfermidade}?`
+            }
+        ]
     });
+
+    const response = await fetch(url, { method: 'POST', headers, body });
+    const data = await response.json();
+    const content = data.choices[0].message.content;
+    alert(`Análise da IA: ${content}`);
 }
+
+
+
 
 
 
