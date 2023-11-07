@@ -301,6 +301,9 @@ while ($row = mysqli_fetch_assoc($result)) {
     });
      
     async function mostrarInfo(idPaciente, enfermidade, medicamento) {
+    // Inicia a animação de carregamento
+    Swal.showLoading();
+
     const url = 'https://api.openai.com/v1/chat/completions';
     const headers = {
         'Content-Type': 'application/json',
@@ -324,6 +327,9 @@ while ($row = mysqli_fetch_assoc($result)) {
     const data = await response.json();
     const content = data.choices[0].message.content;
 
+    // Fecha a animação de carregamento
+    Swal.close();
+
     // Verifica a resposta da IA
     if (content.includes('ATENÇÃO')) {
         // Exibe um alerta de erro se a resposta contém 'ATENÇÃO'
@@ -339,6 +345,8 @@ while ($row = mysqli_fetch_assoc($result)) {
         });
     }
 }
+
+
 
 
 
