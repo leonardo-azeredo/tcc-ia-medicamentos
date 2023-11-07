@@ -324,12 +324,22 @@ while ($row = mysqli_fetch_assoc($result)) {
     const data = await response.json();
     const content = data.choices[0].message.content;
 
-    // Exibe a mensagem do SweetAlert2
-    Swal.fire({
-        icon: 'sucess',
-        title: `Análise da IA: ${content}`
-    });
+    // Verifica a resposta da IA
+    if (content.includes('ATENÇÃO')) {
+        // Exibe um alerta de erro se a resposta contém 'ATENÇÃO'
+        Swal.fire({
+            icon: 'error',
+            title: `Análise da IA: ${content}`
+        });
+    } else {
+        // Exibe um alerta de sucesso para outras respostas
+        Swal.fire({
+            icon: 'success',
+            title: `Análise da IA: ${content}`
+        });
+    }
 }
+
 
 
 
