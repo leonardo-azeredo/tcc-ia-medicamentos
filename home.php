@@ -300,7 +300,7 @@ while ($row = mysqli_fetch_assoc($result)) {
         ]
     });
      
-    async function mostrarInfo(idPaciente,enfermidade, medicamento) {
+    async function mostrarInfo(idPaciente, enfermidade, medicamento) {
     const url = 'https://api.openai.com/v1/chat/completions';
     const headers = {
         'Content-Type': 'application/json',
@@ -323,8 +323,15 @@ while ($row = mysqli_fetch_assoc($result)) {
     const response = await fetch(url, { method: 'POST', headers, body });
     const data = await response.json();
     const content = data.choices[0].message.content;
-    alert(`Análise da IA: ${content}`);
+
+    // Exibe a mensagem do SweetAlert2
+    Swal.fire({
+        icon: 'sucess',
+        title: `Análise da IA: ${content}`
+    });
 }
+
+
 
 
 

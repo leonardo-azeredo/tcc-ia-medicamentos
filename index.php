@@ -41,9 +41,10 @@
                     <div class="col-lg-5 mx-auto">
                         <div class="card">
                             <div class="card-body p-0 auth-header-box">
-                                <div class="text-center p-3">
-                                    <h4 class="mt-3 mb-1 fw-semibold text-white font-18">LOGIN</h4>
-                                </div>
+                            <div class="text-center p-3">
+    <img src="include/imagens/loguinho.jpg" alt="Login" class="mt-3 mb-1 fw-semibold text-white font-18" width="300" height="100">
+</div>
+                             </div>
                             </div>
                             <div class="card-body p-0">
                                 <ul class="nav-border nav nav-pills" role="tablist">
